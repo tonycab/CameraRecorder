@@ -1,0 +1,150 @@
+﻿<Window x:Class="CameraRecorder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CameraRecorder"
+        xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+        xmlns:viewmodel="clr-namespace:CameraRecorder.ViewModel"
+        xmlns:views="clr-namespace:CameraRecorder.View"
+        mc:Ignorable="d"
+        Title="Siif Video Recorder"
+        Height="Auto"
+        Width="Auto"
+        MinWidth="1000"
+        Background="White"
+        SizeToContent="WidthAndHeight"
+        HorizontalAlignment="Stretch"
+        >
+
+
+    <Grid Margin="5,5,5,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        
+        <Grid.RowDefinitions >
+            <RowDefinition Height="*"
+                           MinHeight="500" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="200" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" ></ColumnDefinition>
+            <ColumnDefinition Width="400"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!--Affichage des cameras-->
+
+        <UniformGrid Name="grilleCamera"
+                     Grid.Row="0"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Background="Black">
+        </UniformGrid>
+
+
+        <!--Affichage des boutons de control local-->
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="left"
+                    Orientation="Horizontal"
+                    Margin="5">
+            <Button  x:Name="button"
+                     Content="▶ Start Recording"
+                     HorizontalAlignment="Left"
+                     Margin="5,5,0,0"
+                     Width="150"
+                     Height="25"
+                     VerticalAlignment="Top"
+                     Command="{Binding StartRecorderCommand}"
+                     Style="{StaticResource BlinkingButton}"
+                     Tag="{Binding IsRecording}">
+            </Button>
+            <Button x:Name="button1"
+                    Content="⏹ Stop Recording"
+                    HorizontalAlignment="Left"
+                    Margin="5,5,0,0"
+                    Width="150"
+                    Height="25"
+                    VerticalAlignment="Top"
+                    Command="{Binding StopRecorderCommand}"
+                    Style="{StaticResource SiifButton}" />
+            <Button x:Name="BtnParams"
+                    Content="Configuration"
+                    HorizontalAlignment="Left"
+                    Margin="5,5,0,0"
+                    Width="150"
+                    Height="25"
+                    VerticalAlignment="Top"
+                    Command="{Binding ParamsRecorderCommand}"
+                    Style="{StaticResource SiifButton}" />
+
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal"
+                    VerticalAlignment="center"
+                    Margin="5">
+            <Label>PLC :</Label>
+            <Ellipse Style="{StaticResource Voyant}"
+                     Width="15"
+                     Height="15"
+                     StrokeThickness="2"
+                     Tag="{Binding plc.Connected}"></Ellipse>
+
+        </StackPanel>
+
+        <!--Affichage des logs-->
+        <DataGrid Name="logs"
+                  Grid.Row="2"
+                  ItemsSource="{Binding Logs}"
+                  AutoGenerateColumns="False"
+                  HeadersVisibility="Column"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  LoadingRow="LogsDataGrid_LoadingRow">
+         
+
+            <DataGrid.Columns>
+                <!-- Date / Heure -->
+                <DataGridTextColumn Header="Date / Heure"
+                                    Binding="{Binding Date, StringFormat={}{0:dd/MM/yyyy HH:mm:ss}}"
+                                    Width="180" />
+
+                <!-- Category -->
+                <DataGridTextColumn Header="Category"
+                                    Binding="{Binding Category}"
+                                    Width="80" />
+
+                <!-- Type -->
+                <DataGridTextColumn Header="Type"
+                                    Binding="{Binding Type}"
+                                    Width="80" />
+
+                <!-- Description -->
+                <DataGridTemplateColumn Header="Description"
+                                        Width="350">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextWrapping="Wrap"
+                                       local:TextBlockHelper.BindableText="{Binding Description}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+
+        </DataGrid>
+
+        <Border Grid.Row="0"
+                    Grid.Column="1"
+                    Grid.RowSpan="3"
+                    Margin="0"
+                HorizontalAlignment="Stretch"
+              >
+
+            <views:VideoManagerView x:Name="Vm"
+                                    Margin="0"
+                                    Padding="0"
+                                    HorizontalAlignment="Stretch" />
+        </Border>
+    </Grid>
+
+</Window>

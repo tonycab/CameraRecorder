@@ -1,0 +1,176 @@
+﻿<Window x:Class="CameraRecorder.View.AppParamsEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:CameraRecorder.ViewModel"
+        Title="Éditeur AppParams"
+        Height="650"
+        Width="900"
+        WindowStartupLocation="CenterScreen">
+
+    <!--<Window.DataContext>
+        <vm:AppParamsViewModel />
+    </Window.DataContext>-->
+
+    <Grid Margin="10">
+        <!-- Définition explicite des lignes -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Ligne 0 : paramètres généraux -->
+            <RowDefinition Height="Auto" />
+            <!-- Ligne 1 : titre / boutons caméras -->
+            <RowDefinition Height="*" />
+            <!-- Ligne 2 : DataGrid -->
+            <RowDefinition Height="Auto" />
+            <!-- Ligne 3 : boutons bas -->
+        </Grid.RowDefinitions>
+
+        <!-- SECTION 1 : Paramètres généraux -->
+        <GroupBox Header="Paramètres généraux"
+                  Padding="10"
+                  Grid.Row="0"
+                  Margin="0,0,0,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Dossier :"
+                           VerticalAlignment="Center" />
+                <StackPanel  Grid.Column="1" Orientation="Horizontal">
+                    <TextBox x:Name="Chemin"
+                             Text="{Binding ParamsRecorder.PathFolderRecorder, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                             Margin="5,2" Width="150"/>
+                    <Button Content="..." 
+                            Margin="0,0,0,0"
+                            Width="50"
+                            Click="Button_Click" />
+                </StackPanel>
+                <TextBlock Text="IP PLC :"
+                           Grid.Column="3"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center" />
+                <TextBox Grid.Column="4"
+                         Text="{Binding ParamsRecorder.IPplc, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                         Margin="5,2"
+                         Width="150" />
+
+                <TextBlock Text="DB Number :"
+                           Grid.Column="5"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center" />
+                <TextBox Grid.Column="6"
+                         Text="{Binding ParamsRecorder.DBnumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                         Margin="5,2"
+                         Width="60" />
+
+                <TextBlock Grid.Column="0"
+                           Grid.Row="1"
+                           Text="Size folder max :"
+                           VerticalAlignment="Center" />
+
+
+                <StackPanel Grid.Column="1"
+                            Grid.Row="1"
+                            Orientation="Horizontal">
+                    <TextBox  HorizontalAlignment="Left"
+                              Text="{Binding ParamsRecorder.SizeFolder, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                              Margin="5,2"
+                              Width="60" />
+                    <TextBlock Text="Mo"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+                <TextBlock Grid.Column="0"
+                           Grid.Row="2"
+                           Text="Size file max :"
+                           VerticalAlignment="Center" />
+
+                <StackPanel Grid.Column="1"
+                            Grid.Row="2"
+                            Orientation="Horizontal">
+
+                    <TextBox  HorizontalAlignment="Left"
+                              Text="{Binding ParamsRecorder.SizeFile, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                              Margin="5,2"
+                              Width="60" />
+                    <TextBlock Text="Go"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <!-- SECTION 2 : Boutons caméra -->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="1"
+                    HorizontalAlignment="Left"
+                    Margin="0,0,0,5">
+            <Button Content="Ajouter caméra"
+                    Command="{Binding AddCameraCommand}"
+                    Width="130"
+                    Margin="0,0,5,0" />
+            <Button Content="Supprimer caméra"
+                    Command="{Binding RemoveCameraCommand}"
+                    Width="150" />
+        </StackPanel>
+
+        <!-- SECTION 3 : Tableau des caméras -->
+        <GroupBox Header="Liste des caméras"
+                  Grid.Row="2">
+            <DataGrid ItemsSource="{Binding ParamsRecorder.CamerasParams}"
+                      SelectedItem="{Binding SelectedCamera}"
+                      AutoGenerateColumns="False"
+                      Margin="5"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="False">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Header="Nom"
+                                            Binding="{Binding IsValid}"
+                                            Width="*" />
+                    <DataGridCheckBoxColumn Header="Nom"
+                                            Binding="{Binding ViewEnable}"
+                                            Width="*" />
+                    <DataGridTextColumn Header="Nom"
+                                        Binding="{Binding Name}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="Adresse IP"
+                                        Binding="{Binding AdresseIP}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="Utilisateur"
+                                        Binding="{Binding User}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="Mot de passe"
+                                        Binding="{Binding Password}"
+                                        Width="*" />
+                    <DataGridTextColumn Header="URL"
+                                        Binding="{Binding Url}"
+                                        Width="2*" />
+                    <DataGridTextColumn Header="Pré-enregistrement (s)"
+                                        Binding="{Binding BufferSizeSeconds}"
+                                        Width="*" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <!-- SECTION 4 : Boutons de bas de page -->
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="3"
+                    HorizontalAlignment="Right"
+                    Margin="0,10,0,0">
+            <Button Content="Femer"
+                    Command="{Binding SaveCommand}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"
+                    Width="150" />
+        </StackPanel>
+    </Grid>
+</Window>
