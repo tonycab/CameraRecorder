@@ -134,10 +134,10 @@
                       CanUserDeleteRows="False"
                       IsReadOnly="False">
                 <DataGrid.Columns>
-                    <DataGridCheckBoxColumn Header="Nom"
+                    <DataGridCheckBoxColumn Header="Active"
                                             Binding="{Binding IsValid}"
                                             Width="*" />
-                    <DataGridCheckBoxColumn Header="Nom"
+                    <DataGridCheckBoxColumn Header="Visible"
                                             Binding="{Binding ViewEnable}"
                                             Width="*" />
                     <DataGridTextColumn Header="Nom"
