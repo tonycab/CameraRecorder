@@ -35,11 +35,14 @@
 	<ItemGroup>
 	<None Include="VLC\**" CopyToOutputDirectory="PreserveNewest" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Images\**" />
+	  <EmbeddedResource Remove="Images\**" />
+	  <None Remove="Images\**" />
+	  <Page Remove="Images\**" />
+	</ItemGroup>
   <ItemGroup>
     <Page Include="App.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
   </ItemGroup>
 
 </Project>
