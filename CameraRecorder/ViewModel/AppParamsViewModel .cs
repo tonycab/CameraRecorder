@@ -11,7 +11,7 @@ namespace CameraRecorder.ViewModel
     public class AppParamsViewModel : INotifyPropertyChanged
     {
 
-        public  Params ParamsRecorder { get; set; }
+        public  AppParams ParamsRecorder { get; set; }
 
 
         public RelayCommand SaveCommand { get; }
@@ -43,7 +43,7 @@ namespace CameraRecorder.ViewModel
             {
                 try
                 {
-                    ParamsRecorder = Params.LoadFromFile(FilePath);
+                    ParamsRecorder = AppParams.LoadFromFile(FilePath);
                 }
                 catch (Exception ex)
                 {
@@ -53,7 +53,7 @@ namespace CameraRecorder.ViewModel
             else
             {
                 // Fichier non trouvé → valeurs par défaut
-                ParamsRecorder = new Params
+                ParamsRecorder = new AppParams
                 {
                     PathFolderRecorder = "%USERPROFILE%\\Videos",
                     SizeFolder = 1000,

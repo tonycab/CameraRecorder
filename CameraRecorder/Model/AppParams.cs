@@ -12,7 +12,7 @@ using System.Xml.Linq;
 
 namespace CameraRecorder
 {
-    public class Params : INotifyPropertyChanged, IDataErrorInfo
+    public class AppParams : INotifyPropertyChanged, IDataErrorInfo
     {
 
         private string pathFolderRecorder;
@@ -88,7 +88,7 @@ namespace CameraRecorder
 
 
 
-        public Params() { }
+        public AppParams() { }
 
         /// <summary>
         /// Sérialise la configuration complète en XML string
@@ -96,7 +96,7 @@ namespace CameraRecorder
         public string ToXml()
         {
             var doc = new XDocument(
-                new XElement(nameof(Params),
+                new XElement(nameof(AppParams),
                     new XElement(nameof(PathFolderRecorder), PathFolderRecorder ?? ""),
                     new XElement(nameof(SizeFolder), SizeFolder),
                     new XElement(nameof(SizeFile), SizeFile),
@@ -114,12 +114,12 @@ namespace CameraRecorder
         /// <summary>
         /// Désérialise une configuration depuis XML string
         /// </summary>
-        public static Params FromXml(string xml)
+        public static AppParams FromXml(string xml)
         {
             var doc = XDocument.Parse(xml);
-            var root = doc.Element(nameof(Params));
+            var root = doc.Element(nameof(AppParams));
 
-            var config = new Params
+            var config = new AppParams
             {
                 PathFolderRecorder = root.Element(nameof(PathFolderRecorder))?.Value,
                 SizeFolder = int.TryParse(root.Element(nameof(SizeFolder))?.Value,out int u) ? u : 1000,
@@ -141,7 +141,7 @@ namespace CameraRecorder
         }
 
         public void SaveToFile(string filePath) => File.WriteAllText(filePath, ToXml());
-        public static Params LoadFromFile(string filePath) => FromXml(File.ReadAllText(filePath));
+        public static AppParams LoadFromFile(string filePath) => FromXml(File.ReadAllText(filePath));
 
 
         public event PropertyChangedEventHandler PropertyChanged;
