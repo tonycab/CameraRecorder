@@ -61,7 +61,9 @@ namespace CameraRecorder.ViewModel
             try
             {
 
-                appParams = new AppParamsViewModel(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config.xml"));
+                //appParams = new AppParamsViewModel(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config.xml"));
+                appParams = new AppParamsViewModel(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SIIF", "CameraRecorder", "Config.xml"));
+                
                 appParams.LoadAtStartup(); // 🔹 charge AppParams.xml automatiquement
 
             }

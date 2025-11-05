@@ -52,23 +52,26 @@ namespace CameraRecorder.ViewModel
             }
             else
             {
+
+
                 // Fichier non trouvé → valeurs par défaut
                 ParamsRecorder = new AppParams
                 {
                     PathFolderRecorder = "%USERPROFILE%\\Videos",
                     SizeFolder = 1000,
                     SizeFile = 500,
-                    IPplc = "192.168.0.10",
+                    IPplc = "192.32.98.120",
                     DBnumber = 300,
                     CamerasParams = new ObservableCollection<CameraParams>
                 {
                     new CameraParams
                     {
                         IsValid = true,
-                        Name = "Caméra 1",
-                        AdresseIP = "192.168.0.101",
+                        ViewEnable = true,
+                        Name = "Cam1",
+                        AdresseIP = "192.32.98.120",
                         User = "admin",
-                        Password = "",
+                        Password = "@HIKVISION",
                         Url = "/Streaming/Channels/101",
                         BufferSizeSeconds = 60
                     }
@@ -78,6 +81,9 @@ namespace CameraRecorder.ViewModel
 
                 try
                 {
+
+                    Directory.CreateDirectory(Path.GetDirectoryName(FilePath));
+
                     ParamsRecorder.SaveToFile(FilePath);
                 }
                 catch (Exception ex)
