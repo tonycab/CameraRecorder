@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:CameraRecorder"
         xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         xmlns:viewmodel="clr-namespace:CameraRecorder.ViewModel"
+        xmlns:Plc="clr-namespace:CameraRecorder.Model.Communication"
         xmlns:views="clr-namespace:CameraRecorder.View"
         mc:Ignorable="d"
         Title="Siif Video Recorder"
@@ -24,7 +25,8 @@
             <RowDefinition Height="*"
                            MinHeight="500" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="200" />
+            <RowDefinition Height="200"></RowDefinition>
+            
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" ></ColumnDefinition>
@@ -87,9 +89,12 @@
                      Width="15"
                      Height="15"
                      StrokeThickness="2"
-                     Tag="{Binding plc.Connected}"></Ellipse>
+                     Tag="{Binding Plc.Connected}"></Ellipse>
 
         </StackPanel>
+
+      
+
 
         <!--Affichage des logs-->
         <DataGrid Name="logs"
@@ -101,7 +106,6 @@
                   CanUserDeleteRows="False"
                   IsReadOnly="True"
                   LoadingRow="LogsDataGrid_LoadingRow">
-         
 
             <DataGrid.Columns>
                 <!-- Date / Heure -->

@@ -1,4 +1,5 @@
-﻿using CameraRecorder.View;
+﻿using CameraRecorder.Model.Communication;
+using CameraRecorder.View;
 using LibVLCSharp.Shared;
 using LibVLCSharp.WPF;
 using Microsoft.Win32;
@@ -13,6 +14,8 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media.Media3D;
+using CameraRecorder.Model.Communication;
+using CameraRecorder.Model.Communication.Snap7;
 
 namespace CameraRecorder.ViewModel
 {
@@ -27,10 +30,9 @@ namespace CameraRecorder.ViewModel
 
         public List<CameraRTSP> Cameras = new List<CameraRTSP>();
 
-        public ComPLC plc { get; set; }
+        public ICom Plc { get; set; }
 
-        
-
+       
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private bool _isRecording;
@@ -89,19 +91,19 @@ namespace CameraRecorder.ViewModel
             
 
             //Bouton d'enregistrement
-            StartRecorderCommand = new RelayCommand(new Action<object>((o) => StartRecorder("Local")));
+            StartRecorderCommand = new RelayCommand(new Action<object>((o) => StartRecorder("Local",0)));
             StopRecorderCommand = new RelayCommand(new Action<object>((o) => StopRecorder()));
             ParamsRecorderCommand = new RelayCommand(new Action<object>((o) => ParamsRecorder()));
 
             //Initialisae la communication avec le PLC
-            plc = new ComPLC(appParams.ParamsRecorder.IPplc, appParams.ParamsRecorder.DBnumber);
+            Plc = new ComPLC(appParams.ParamsRecorder.IPplc, appParams.ParamsRecorder.DBnumber);
 
             //Abonnement aux événements du PLC
-            plc.OnRecord += (f) => StartRecorder(f);
-            plc.StopRecord += () => StopRecorder();
+            Plc.OnRecord += (f,t) => StartRecorder(f,t);
+            Plc.StopRecord += () => StopRecorder();
 
             //Lancement de la communication
-            plc.StartCom();
+            Plc.StartCom();
         }
 
         private void ParamsRecorder()
@@ -114,7 +116,7 @@ namespace CameraRecorder.ViewModel
             appParamsEditor.Show();
         }
 
-        private void StartRecorder(string ArgPlc)
+        private void StartRecorder(string ArgPlc,uint timeBuffer)
         {
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -124,7 +126,7 @@ namespace CameraRecorder.ViewModel
                     if (!camera.isRecording)
                     {
                         var folder = Environment.ExpandEnvironmentVariables(appParams.ParamsRecorder.PathFolderRecorder);
-                        camera.StartRecording(Path.Combine(folder, $"{ArgPlc}_{camera.CameraParams.Name}_{DateTime.Now:yyyyMMdd_HHmmss}"));
+                        camera.StartRecording(Path.Combine(folder, $"{ArgPlc}_{camera.CameraParams.Name}_{DateTime.Now:yyyyMMdd_HHmmss}"),timeBuffer);
 
                         Logs.Add(new Log(DateTime.Now.ToString(), EnumCategory.Info, camera.CameraParams.Name, $"Start Recording"));
                     }

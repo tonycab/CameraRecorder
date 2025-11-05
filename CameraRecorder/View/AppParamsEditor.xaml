@@ -87,7 +87,7 @@
                               Text="{Binding ParamsRecorder.SizeFolder, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                               Margin="5,2"
                               Width="60" />
-                    <TextBlock Text="Mo"
+                    <TextBlock Text="Go"
                                VerticalAlignment="Center" />
                 </StackPanel>
                 <TextBlock Grid.Column="0"
@@ -103,7 +103,7 @@
                               Text="{Binding ParamsRecorder.SizeFile, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                               Margin="5,2"
                               Width="60" />
-                    <TextBlock Text="Go"
+                    <TextBlock Text="Mo"
                                VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>

@@ -322,7 +322,7 @@ namespace CameraRecorder
 
         // Démarrer un enregistrement
         // minDurationSeconds = 60 pour les vidéos suivantes
-        public void StartRecording(string outputFile, int minDurationSeconds = 60)
+        public void StartRecording(string outputFile, uint minDurationSeconds = 60)
         {
 
             OutputFileName = outputFile;
@@ -339,8 +339,16 @@ namespace CameraRecorder
 
                 isRecording = true;
 
+                double timeb = CameraParams.BufferSizeSeconds;
+
+                if (minDurationSeconds < CameraParams.BufferSizeSeconds)
+                {
+                    timeb = minDurationSeconds;
+                }
+
+
                 // écrire la dernière minute du buffer
-                var cutoff = DateTime.Now.AddSeconds(-CameraParams.BufferSizeSeconds);
+                var cutoff = DateTime.Now.AddSeconds(-timeb);
                 foreach (var (timestampDt, chunk, length) in _bufferQueue)
                 {
                     if (timestampDt >= cutoff)

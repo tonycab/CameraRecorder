@@ -44,5 +44,13 @@
   <ItemGroup>
     <Page Include="App.xaml" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\Communication\EthernetIP\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="libplctag">
+      <HintPath>Dépendances\libplctag.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 
 </Project>

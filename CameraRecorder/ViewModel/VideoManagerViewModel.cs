@@ -29,6 +29,7 @@ namespace CameraRecorder.ViewModel
         public ObservableCollection<VideoFile> Videos { get; set; } = new();
 
         public ICommand CopyCommand { get; }
+        public ICommand CopyMp4Command { get; }
         public ICommand DeleteCommand { get; }
 
         public ICommand AllSelect { get; }
@@ -39,6 +40,8 @@ namespace CameraRecorder.ViewModel
 
 
         private double sizeFolderMax=300;
+
+        //Taille max du répertoire en Go
         public double SizeFolderMax
         {
             get
@@ -56,6 +59,7 @@ namespace CameraRecorder.ViewModel
             }
         }
 
+        //Taille actuelle du répertoire en Mo
         private double sizeFolder=0;
         public double SizeFolder
         {
@@ -74,6 +78,8 @@ namespace CameraRecorder.ViewModel
             }
         }
 
+
+        //String affichant la taille du répertoire
         private string sizeFolderString;
         public string SizeFolderString
         {
@@ -126,6 +132,7 @@ namespace CameraRecorder.ViewModel
             DeleteCommand = new RelayCommand(async _ => await DeleteSelectedVideos());
             AllSelect = new RelayCommand(async _ => await AllSelectVideos());
             NoAllSelect = new RelayCommand(async _ => await NoAllSelectVideos());
+            CopyMp4Command = new RelayCommand(async _ => await CopySelectedVideosMP4());
         }
 
         private async Task NoAllSelectVideos()
@@ -289,6 +296,77 @@ namespace CameraRecorder.ViewModel
                 System.Windows.MessageBox.Show("Copie terminée ✅", "Succès");
             }
         }
+
+        private async Task CopySelectedVideosMP4()
+        {
+            var selected = Videos.Where(v => v.IsSelected).ToList();
+            if (!selected.Any())
+            {
+                System.Windows.MessageBox.Show("Aucune vidéo sélectionnée.", "Information");
+                return;
+            }
+
+            var dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true,
+                Title = "Choisissez le dossier de destination"
+            };
+
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                string destinationFolder = dialog.FileName;
+
+                foreach (var video in selected)
+                {
+                 
+
+                    string destPath = Path.Combine(destinationFolder, Path.GetFileNameWithoutExtension(video.Name) + ".mp4");
+
+                    await ConvertTsToMp4Async(video.FilePath, destPath);
+
+                    //await Task.Run(() => File.Copy(video.FilePath, destPath, true));
+                }
+
+                System.Windows.MessageBox.Show("Copie terminée ✅", "Succès");
+            }
+        }
+
+        /// <summary>
+        /// Convertit un fichier .ts en .mp4 très compressé à l'aide de ffmpeg.
+        /// </summary>
+        /// <param name="inputPath">Chemin complet du fichier source (.ts)</param>
+        /// <param name="outputPath">Chemin complet du fichier cible (.mp4)</param>
+        private static async Task<string> ConvertTsToMp4Async(string inputPath, string outputPath)
+        {
+            if (!System.IO.File.Exists(inputPath))
+                throw new FileNotFoundException("Le fichier source n'existe pas.", inputPath);
+
+            // Paramètres de compression : H.264 + CRF 28 pour une forte compression
+            string arguments = $"-i \"{inputPath}\" -c:v libx264 -preset veryslow -crf 28 -c:a aac -b:a 96k -movflags +faststart \"{outputPath}\" -y";
+
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "ffmpeg",
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using var process = new Process { StartInfo = startInfo };
+            process.Start();
+
+            // Optionnel : lire la sortie d’erreur pour suivre la progression
+            string stderr = await process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+
+            if (process.ExitCode != 0)
+                throw new Exception($"Erreur lors de la conversion FFmpeg : {stderr}");
+
+            return outputPath;
+        }
+
 
 
         private async Task DeleteSelectedVideos()
