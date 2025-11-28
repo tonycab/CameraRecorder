@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <SignAssembly>False</SignAssembly>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationIcon>bin\Release\net8.0-windows\Logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -40,6 +41,9 @@
 	  <EmbeddedResource Remove="Images\**" />
 	  <None Remove="Images\**" />
 	  <Page Remove="Images\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="bin\Release\net8.0-windows\Logo.ico" />
 	</ItemGroup>
   <ItemGroup>
     <Page Include="App.xaml" />
